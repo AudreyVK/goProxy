@@ -1,4 +1,4 @@
-package main
+/*package main
 
 import (
 	"log"
@@ -24,9 +24,7 @@ func main() {
 	})
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
-}
-
-
+}*/
 
 /*package main
 
