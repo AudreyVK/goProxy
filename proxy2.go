@@ -1,10 +1,21 @@
 package main
 
 import (
-	"io"
 	"log"
-	"net"
+	"net/http"
+	"net/http/httputil"
+	"net/url"
 )
+
+func main() {
+	demoURL, err := url.Parse("http://127.0.0.1:8080")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	proxy := httputil.NewSingleHostReverseProxy(demoURL)
+	http.ListenAndServe(":8081", proxy)
+}
 
 /*type Pxy struct{}
 
@@ -46,7 +57,7 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 }*/
 
-func main() {
+/*func main() {
 	listener, err := net.Listen("tcp", ":8080")
 	if err != nil {
 		log.Print(err)
@@ -80,7 +91,7 @@ func handleConn(src net.Conn) {
 	if _, err := io.Copy(src, dst); err != nil {
 		log.Print(err)
 	}
-}
+}*/
 
 /*func main() {
 	/*conn, err := net.Dial("tcp", "http://172.17.0.2:80")
