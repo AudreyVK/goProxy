@@ -1,10 +1,9 @@
 package main
 
 import (
-	"fmt"
-	"io/ioutil"
-	"net/http"
-	"net/url"
+	"io"
+	"log"
+	"net"
 )
 
 /*type Pxy struct{}
@@ -47,7 +46,7 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 }*/
 
-/*func main() {
+func main() {
 	listener, err := net.Listen("tcp", ":8080")
 	if err != nil {
 		log.Print(err)
@@ -65,7 +64,7 @@ func main() {
 }
 
 func handleConn(src net.Conn) {
-	dst, err := net.Dial("tcp", "167.235.57.197:80")
+	dst, err := net.Dial("tcp", "www.th-luebeck.de:80")
 	if err != nil {
 		log.Print(err)
 	}
@@ -81,16 +80,16 @@ func handleConn(src net.Conn) {
 	if _, err := io.Copy(src, dst); err != nil {
 		log.Print(err)
 	}
-}*/
+}
 
-func main() {
+/*func main() {
 	/*conn, err := net.Dial("tcp", "http://172.17.0.2:80")
 	if err != nil {
 		// handle error
 	}
 	fmt.Fprintf(conn, "GET / HTTP/1.0\r\n\r\n")
 	http.ListenAndServe(":8080", nil)
-	conn, err := net.Dial("tcp", "http://172.17.0.2:80")*/
+	conn, err := net.Dial("tcp", "http://172.17.0.2:80")
 
 	proxyUrl, err := url.Parse("http://167.235.57.197:8080")
 	http.DefaultTransport = &http.Transport{Proxy: http.ProxyURL(proxyUrl)}
@@ -103,4 +102,4 @@ func main() {
 		fmt.Println("Statustext: ", http.StatusText(response.StatusCode))
 		fmt.Println(body)
 	}
-}
+}*/
