@@ -1,20 +1,37 @@
-/*package main
+package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
-	"net/http/httputil"
-	"net/url"
 )
 
 func main() {
-	demoURL, err := url.Parse("http://127.0.0.1:8080")
-	if err != nil {
-		log.Fatal(err)
-	}
+	http.HandleFunc("/bar", func(w http.ResponseWriter, r *http.Request) {
+		response, err := http.Get("http://:8082")
+		if err != nil {
+			fmt.Println(err.Error())
+		} else {
+			//body, _ := ioutil.ReadAll(response.Body)
+			fmt.Println("Statuscode: ", response.StatusCode)
+			fmt.Println("Statustext: ", http.StatusText(response.StatusCode))
+			//fmt.Println(body)
+		}
+		//fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
+	})
 
-	proxy := httputil.NewSingleHostReverseProxy(demoURL)
-	http.ListenAndServe(":8081", proxy)
+	log.Fatal(http.ListenAndServe(":8081", nil))
+
+	//response, err := http.Get("http://www.google.com")
+	/*if err != nil {
+		fmt.Println(err.Error())
+	} else {
+		body, _ := ioutil.ReadAll(response.Body)
+		fmt.Println("Statuscode: ", response.StatusCode)
+		fmt.Println("Statustext: ", http.StatusText(response.StatusCode))
+		fmt.Println(body)
+	}*/
+
 }
 
 /*type Pxy struct{}
