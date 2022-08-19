@@ -15,8 +15,9 @@ func main() {
 			log.Fatal(err)
 		}
 
-		fmt.Printf("REQUEST:\n%s", string(reqDump))
-		w.Write([]byte("Hello World"))
+		//fmt.Printf("REQUEST:\n%s", string(reqDump))
+		w.Write([]byte("Request: \n"))
+		w.Write([]byte(reqDump))
 	})
 	log.Printf("Starting HTTP server at port: %d\n", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), nil))
