@@ -2,10 +2,15 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 )
+
+type Flusher interface {
+	// Flush sends any buffered data to the client.
+	Flush()
+}
 
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -22,14 +27,25 @@ func main() {
 
 		defer response.Body.Close()
 
-		body, err := ioutil.ReadAll(response.Body)
+		/*body, err := ioutil.ReadAll(response.Body)
 		if err != nil {
 			log.Fatalf("Couldn't parse response body. %+v", err)
-		}
+		}*/
 		//fmt.Fprintf(w, "%s %q", r.Method, html.EscapeString(r.URL.Path)) debugging
-		fmt.Println(response.StatusCode)
-		fmt.Println(http.StatusText(response.StatusCode))
-		fmt.Println(string(body))
+
+		//fmt.Fprintf(w, "header: %v\n", r.Header)
+		fmt.Fprintf(w, "%v\n", response.StatusCode)
+		fmt.Fprintf(w, "%v\n", http.StatusText(response.StatusCode))
+		fmt.Fprintf(w, "%v / %v\n", r.Method, response.Request.Proto)
+		fmt.Fprintf(w, "Host: %v\n", r.Host)
+		//fmt.Fprintf(w, "%v\n", string(body))
+		for key, element := range r.Header {
+			element := strings.Replace(element[0], "[", "", -1)
+			fmt.Fprintf(w, "%v: %v\n", key, element)
+		}
+
+		//fmt.Println(http.StatusText(response.StatusCode))
+		//fmt.Println(string(body))
 
 	})
 

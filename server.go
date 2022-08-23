@@ -14,9 +14,8 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-
-		w.Write([]byte("Request: \n"))
-		w.Write([]byte("The Dummy-Statuscode is: 200\n"))
+		w.WriteHeader(http.StatusInternalServerError)
+		r.Header.Add(string(http.StatusInternalServerError), string(http.StatusInternalServerError))
 		w.Write([]byte(reqDump))
 	})
 	log.Printf("Starting HTTP server at port: %d\n", port)
