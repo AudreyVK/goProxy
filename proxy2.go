@@ -2,37 +2,86 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 )
 
 func main() {
-	http.HandleFunc("/bar", func(w http.ResponseWriter, r *http.Request) {
-		response, err := http.Get("http://:8082")
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		req, err := http.NewRequest(http.MethodGet, "http://:8082", nil)
 		if err != nil {
-			fmt.Println(err.Error())
-		} else {
-			//body, _ := ioutil.ReadAll(response.Body)
-			fmt.Println("Statuscode: ", response.StatusCode)
-			fmt.Println("Statustext: ", http.StatusText(response.StatusCode))
-			//fmt.Println(body)
+			log.Fatalf("Error Occurred. %+v", err)
 		}
-		//fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
+
+		response, err := http.DefaultClient.Do(req)
+		if err != nil {
+			log.Fatalf("Error sending request to API endpoint. %+v", err)
+		}
+
+		defer response.Body.Close()
+
+		body, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			log.Fatalf("Couldn't parse response body. %+v", err)
+		}
+
+		fmt.Println(response.StatusCode)
+		fmt.Println(http.StatusText(response.StatusCode))
+		fmt.Println(string(body))
+
 	})
 
 	log.Fatal(http.ListenAndServe(":8081", nil))
 
-	//response, err := http.Get("http://www.google.com")
-	/*if err != nil {
-		fmt.Println(err.Error())
-	} else {
-		body, _ := ioutil.ReadAll(response.Body)
-		fmt.Println("Statuscode: ", response.StatusCode)
-		fmt.Println("Statustext: ", http.StatusText(response.StatusCode))
-		fmt.Println(body)
-	}*/
-
 }
+
+/*func httpClient() *http.Client {
+	client := &http.Client{Timeout: 10 * time.Second}
+	return client
+}*/
+/*var website string
+fmt.Println("Type in the URL you want to reach.")
+fmt.Scan(&website)
+fmt.Println()*/
+//response := sendRequest(http.MethodPost)
+//log.Println("Response Body:", string(response))
+//response, err := sendRequest(http.MethodPost)
+//if err != nil {
+//	fmt.Println(err.Error())
+//} else {
+//defer response.Body.Close()
+//body, _ := ioutil.ReadAll(response.Body)
+//fmt.Println("Statuscode: ", response.StatusCode)
+//fmt.Println("Statustext: ", http.StatusText(response.StatusCode))
+//fmt.Println(string(response))
+//}
+
+/*func sendRequest(method string) ([]byte, error) {
+	server := "http://:8082"
+	values := map[string]string{"foo": "bar"}
+	jsonData, err := json.Marshal(values)
+
+	req, err := http.NewRequest(method, server, bytes.NewBuffer(jsonData))
+	if err != nil {
+		log.Fatalf("Error Occurred. %+v", err)
+	}
+
+	response, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Fatalf("Error sending request to API endpoint. %+v", err)
+	}
+
+	// Close the connection to reuse it
+	defer response.Body.Close()
+
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		log.Fatalf("Couldn't parse response body. %+v", err)
+	}
+
+	return body, err
+}*/
 
 /*type Pxy struct{}
 
@@ -130,4 +179,13 @@ func handleConn(src net.Conn) {
 		fmt.Println("Statustext: ", http.StatusText(response.StatusCode))
 		fmt.Println(body)
 	}
+}*/
+//response, err := http.Get("http://www.google.com")
+/*if err != nil {
+	fmt.Println(err.Error())
+} else {
+	body, _ := ioutil.ReadAll(response.Body)
+	fmt.Println("Statuscode: ", response.StatusCode)
+	fmt.Println("Statustext: ", http.StatusText(response.StatusCode))
+	fmt.Println(body)
 }*/
