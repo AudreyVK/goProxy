@@ -9,7 +9,8 @@ import (
 
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		req, err := http.NewRequest(http.MethodGet, "http://:8082", nil)
+		req, err := http.NewRequest(r.Method, "http:/"+r.RequestURI, nil)
+
 		if err != nil {
 			log.Fatalf("Error Occurred. %+v", err)
 		}
@@ -25,7 +26,7 @@ func main() {
 		if err != nil {
 			log.Fatalf("Couldn't parse response body. %+v", err)
 		}
-
+		//fmt.Fprintf(w, "%s %q", r.Method, html.EscapeString(r.URL.Path)) debugging
 		fmt.Println(response.StatusCode)
 		fmt.Println(http.StatusText(response.StatusCode))
 		fmt.Println(string(body))
