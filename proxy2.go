@@ -33,15 +33,29 @@ func main() {
 		}*/
 		//fmt.Fprintf(w, "%s %q", r.Method, html.EscapeString(r.URL.Path)) debugging
 
-		//fmt.Fprintf(w, "header: %v\n", r.Header)
+		//fmt.Println(r.Body.Read([]byte(response.Status)))
+
+		//fmt.Fprintf(w, "%v\n", headerRes)
+		fmt.Fprintf(w, "header: %v\n", response.Header)
 		fmt.Fprintf(w, "%v\n", response.StatusCode)
 		fmt.Fprintf(w, "%v\n", http.StatusText(response.StatusCode))
 		fmt.Fprintf(w, "%v / %v\n", r.Method, response.Request.Proto)
 		fmt.Fprintf(w, "Host: %v\n", r.Host)
-		//fmt.Fprintf(w, "%v\n", string(body))
-		for key, element := range r.Header {
+
+		//w.Header().Add("statuscode:", r.RemoteAddr)
+		//fmt.Fprintf(w, "%v\n", body)
+		/*for key, element := range r.Header {
 			element := strings.Replace(element[0], "[", "", -1)
 			fmt.Fprintf(w, "%v: %v\n", key, element)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}*/
+		headerRes := response.Header.Clone()
+		for key, element := range headerRes {
+			element := strings.Replace(element[0], "[", "", -1)
+			fmt.Fprintf(w, "%v: %v\n", key, element)
+			w.Header().Add(key, element)
 			if err != nil {
 				log.Fatal(err)
 			}
