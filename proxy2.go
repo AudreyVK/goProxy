@@ -42,16 +42,17 @@ func main() {
 		for key, element := range r.Header {
 			element := strings.Replace(element[0], "[", "", -1)
 			fmt.Fprintf(w, "%v: %v\n", key, element)
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 
-		//fmt.Println(http.StatusText(response.StatusCode))
-		//fmt.Println(string(body))
-
 	})
-
 	log.Fatal(http.ListenAndServe(":8081", nil))
-
 }
+
+//fmt.Println(http.StatusText(response.StatusCode))
+//fmt.Println(string(body))
 
 /*func httpClient() *http.Client {
 	client := &http.Client{Timeout: 10 * time.Second}

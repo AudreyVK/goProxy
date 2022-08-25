@@ -15,8 +15,20 @@ func main() {
 			log.Fatal(err)
 		}
 		w.WriteHeader(http.StatusInternalServerError)
-		r.Header.Add(string(http.StatusInternalServerError), string(http.StatusInternalServerError))
+		r.Header.Add("test", "123")
+		w.Header().Add("test", "123")
+		w.Header().Values("test")
+		fmt.Fprintf(w, "header: %v\n", r.Header)
+		/*for key, element := range r.Header {
+			element := strings.Replace(element[0], "[", "", -1)
+			fmt.Fprintf(w, "%v: %v\n", key, element)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}*/
+
 		w.Write([]byte(reqDump))
+
 	})
 	log.Printf("Starting HTTP server at port: %d\n", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), nil))
