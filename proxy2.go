@@ -15,7 +15,6 @@ type Flusher interface {
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		req, err := http.NewRequest(r.Method, "http:/"+r.RequestURI, nil)
-
 		if err != nil {
 			log.Fatalf("Error Occurred. %+v", err)
 		}
@@ -36,7 +35,16 @@ func main() {
 		//fmt.Println(r.Body.Read([]byte(response.Status)))
 
 		//fmt.Fprintf(w, "%v\n", headerRes)
-		fmt.Fprintf(w, "header: %v\n", response.Header)
+		//fmt.Fprintf(w, "header: %v\n", response.Header)
+		headerRes := response.Header.Clone()
+		for key, element := range headerRes {
+			element := strings.Replace(element[0], "[", "", -1)
+			//fmt.Fprintf(w, "%v: %v\n", key, element)
+			w.Header().Add(key, element)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
 		fmt.Fprintf(w, "%v\n", response.StatusCode)
 		fmt.Fprintf(w, "%v\n", http.StatusText(response.StatusCode))
 		fmt.Fprintf(w, "%v / %v\n", r.Method, response.Request.Proto)
@@ -51,15 +59,6 @@ func main() {
 				log.Fatal(err)
 			}
 		}*/
-		headerRes := response.Header.Clone()
-		for key, element := range headerRes {
-			element := strings.Replace(element[0], "[", "", -1)
-			fmt.Fprintf(w, "%v: %v\n", key, element)
-			w.Header().Add(key, element)
-			if err != nil {
-				log.Fatal(err)
-			}
-		}
 
 	})
 	log.Fatal(http.ListenAndServe(":8081", nil))
