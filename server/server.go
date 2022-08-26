@@ -16,10 +16,9 @@ func main() {
 		}
 
 		//r.Header.Add("test", "123")
-		w.Header().Add("test", "123")
 		//w.Header().Values("test")
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintf(w, "header: %v\n", r.Header)
+		//w.WriteHeader(http.StatusInternalServerError)
+		//fmt.Fprintf(w, "header: %v\n", r.Header)
 		/*for key, element := range r.Header {
 			element := strings.Replace(element[0], "[", "", -1)
 			fmt.Fprintf(w, "%v: %v\n", key, element)
@@ -27,7 +26,9 @@ func main() {
 				log.Fatal(err)
 			}
 		}*/
-
+		w.Header().Add("test", "123")
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("200\n"))
 		w.Write([]byte(reqDump))
 
 	})
