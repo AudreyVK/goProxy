@@ -2,16 +2,10 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"strings"
 )
-
-type Flusher interface {
-	// Flush sends any buffered data to the client.
-	Flush()
-}
 
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -27,53 +21,52 @@ func main() {
 
 		defer response.Body.Close()
 
-		body, err := io.ReadAll(response.Body)
+		/*body, err := io.ReadAll(response.Body)
 		if err != nil {
 			log.Fatalf("Couldn't parse response body. %+v", err)
-		}
+		}*/
 
-		headerRes := response.Header.Clone()
+		/*headerRes := response.Header.Clone()
 
 		for key, element := range headerRes {
-			//element := strings.Replace(element[0], "[", "", -1)
-			//elementstr := strings.Join(element, ", ")
 			for i := 0; i < len(element); i++ {
 				w.Header().Add(key, element[i])
 			}
-			/*for key, _ := range headerRes {
-				w.Header().Add(key, elementstr)
-			}*/
-			w.Write([]byte(""))
-			//fmt.Printf("%v: %v\n", key, element)
+
+			//w.Write([]byte(""))
 			if err != nil {
 				log.Fatal(err)
 			}
-		}
+		}*/
+		w.WriteHeader(response.StatusCode)
 
-		//fmt.Fprintf(w, "%s %q", r.Method, html.EscapeString(r.URL.Path)) debugging
-		//fmt.Println(r.Body.Read([]byte(response.Status)))
-		//fmt.Fprintf(w, "%v\n", headerRes)
-		//fmt.Fprintf(w, "header: %v\n", response.Header)
-		//fmt.Fprintf(w, "%v\n", http.StatusText(response.StatusCode))
-
-		//
-		//w.Header().Add("statuscode:", r.RemoteAddr)
-		//fmt.Println(string(body))
-		fmt.Fprintf(w, "%v\n", string(body))
-		fmt.Fprintf(w, "%v / %v\n", r.Method, response.Request.Proto)
-		fmt.Fprintf(w, "Host: %v\n", r.Host)
-		for key, element := range r.Header {
+		reqHeaderClone := r.Header.Clone()
+		for key, element := range reqHeaderClone {
 			element := strings.Replace(element[0], "[", "", -1)
+			r.Header.Add(key, element)
 			fmt.Fprintf(w, "%v: %v\n", key, element)
 			if err != nil {
 				log.Fatal(err)
 			}
 		}
-		fmt.Fprintf(w, "%v\n", response.StatusCode)
+
 	})
 	log.Fatal(http.ListenAndServe(":8081", nil))
 }
 
+//fmt.Fprintf(w, "%v\n", response.StatusCode)
+//fmt.Fprintf(w, "%s %q", r.Method, html.EscapeString(r.URL.Path)) debugging
+//fmt.Println(r.Body.Read([]byte(response.Status)))
+//fmt.Fprintf(w, "%v\n", headerRes)
+//fmt.Fprintf(w, "header: %v\n", response.Header)
+//fmt.Fprintf(w, "%v\n", http.StatusText(response.StatusCode))
+
+//
+//w.Header().Add("statuscode:", r.RemoteAddr)
+//fmt.Println(string(body))
+//fmt.Fprintf(w, "%v\n", string(body))
+//fmt.Fprintf(w, "%v / %v\n", r.Method, response.Request.Proto)
+//fmt.Fprintf(w, "Host: %v\n", r.Host)
 //fmt.Println(http.StatusText(response.StatusCode))
 //fmt.Println(string(body))
 
