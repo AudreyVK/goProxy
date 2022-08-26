@@ -36,8 +36,13 @@ func main() {
 
 		for key, element := range headerRes {
 			//element := strings.Replace(element[0], "[", "", -1)
-			elementstr := strings.Join(element, ", ")
-			w.Header().Add(key, elementstr)
+			//elementstr := strings.Join(element, ", ")
+			for i := 0; i < len(element); i++ {
+				w.Header().Add(key, element[i])
+			}
+			/*for key, _ := range headerRes {
+				w.Header().Add(key, elementstr)
+			}*/
 			w.Write([]byte(""))
 			//fmt.Printf("%v: %v\n", key, element)
 			if err != nil {
