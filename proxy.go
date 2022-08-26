@@ -24,7 +24,7 @@ func main() {
 
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
-			log.Fatalf("Couldn't parse response body. %+v", err)
+			log.Fatalf("Couldn't parse request body. %+v", err)
 		}
 
 		headerRes := response.Header.Clone()
