@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"strings"
@@ -21,12 +22,12 @@ func main() {
 
 		defer response.Body.Close()
 
-		/*body, err := io.ReadAll(response.Body)
+		body, err := io.ReadAll(r.Body)
 		if err != nil {
 			log.Fatalf("Couldn't parse response body. %+v", err)
-		}*/
+		}
 
-		/*headerRes := response.Header.Clone()
+		headerRes := response.Header.Clone()
 
 		for key, element := range headerRes {
 			for i := 0; i < len(element); i++ {
@@ -37,19 +38,20 @@ func main() {
 			if err != nil {
 				log.Fatal(err)
 			}
-		}*/
-		w.WriteHeader(response.StatusCode)
+		}
 
 		reqHeaderClone := r.Header.Clone()
 		for key, element := range reqHeaderClone {
 			element := strings.Replace(element[0], "[", "", -1)
 			r.Header.Add(key, element)
-			fmt.Fprintf(w, "%v: %v\n", key, element)
+			//fmt.Fprintf(w, "%v: %v\n", key, element)
 			if err != nil {
 				log.Fatal(err)
 			}
 		}
 
+		w.WriteHeader(response.StatusCode)
+		fmt.Fprintf(w, "%v", string(body))
 	})
 	log.Fatal(http.ListenAndServe(":8081", nil))
 }
