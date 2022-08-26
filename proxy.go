@@ -33,11 +33,10 @@ func main() {
 			for i := 0; i < len(element); i++ {
 				w.Header().Add(key, element[i])
 			}
-
 			//w.Write([]byte(""))
-			if err != nil {
+			/*if err != nil {
 				log.Fatal(err)
-			}
+			}*/
 		}
 
 		reqHeaderClone := r.Header.Clone()
@@ -45,9 +44,9 @@ func main() {
 			element := strings.Replace(element[0], "[", "", -1)
 			r.Header.Add(key, element)
 			//fmt.Fprintf(w, "%v: %v\n", key, element)
-			if err != nil {
+			/*if err != nil {
 				log.Fatal(err)
-			}
+			}*/
 		}
 
 		w.WriteHeader(response.StatusCode)
