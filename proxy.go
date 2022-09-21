@@ -9,7 +9,8 @@ import (
 
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		req, err := http.NewRequest(r.Method, "http:/"+r.RequestURI, r.Body)
+
+		req, err := http.NewRequest(r.Method, "https:/"+r.URL.Path, nil)
 		if err != nil {
 			log.Fatalf("Error Occurred. %+v", err)
 		}
@@ -19,6 +20,11 @@ func main() {
 			for i := 0; i < len(element); i++ {
 				req.Header.Add(key, element[i])
 			}
+		}
+		defer r.Body.Close()
+		reqbody, err := io.ReadAll(r.Body)
+		if err != nil {
+			log.Fatalf("Couldn't parse request body. %+v", err)
 		}
 
 		response, err := http.DefaultClient.Do(req)
@@ -33,11 +39,6 @@ func main() {
 			log.Fatalf("Couldn't parse response body. %+v", err)
 		}
 
-		reqbody, err := io.ReadAll(r.Body)
-		if err != nil {
-			log.Fatalf("Couldn't parse request body. %+v", err)
-		}
-
 		headerRes := response.Header.Clone()
 
 		for key, element := range headerRes {
@@ -50,7 +51,8 @@ func main() {
 
 		fmt.Fprintf(w, "%v", string(body))
 
-		fmt.Printf("%v", reqbody)
+		fmt.Printf("%v", string(reqbody))
+		fmt.Print("http:/" + r.URL.Path)
 	})
 	log.Fatal(http.ListenAndServe(":8081", nil))
 }

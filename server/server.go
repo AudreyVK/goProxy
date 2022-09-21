@@ -18,7 +18,7 @@ func main() {
 		//r.Header.Add("test", "123")
 		//w.Header().Values("test")
 		w.Header().Add("test", "123")
-		w.WriteHeader(http.StatusInternalServerError)
+		//w.WriteHeader(http.StatusInternalServerError)
 		//fmt.Fprintf(w, "header: %v\n", r.Header)
 		/*for key, element := range r.Header {
 			element := strings.Replace(element[0], "[", "", -1)
