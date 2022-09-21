@@ -10,7 +10,7 @@ import (
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
-		req, err := http.NewRequest(r.Method, "https:/"+r.URL.Path, nil)
+		req, err := http.NewRequest(r.Method, "http:/"+r.URL.Path, r.Body)
 		if err != nil {
 			log.Fatalf("Error Occurred. %+v", err)
 		}
@@ -21,11 +21,11 @@ func main() {
 				req.Header.Add(key, element[i])
 			}
 		}
-		defer r.Body.Close()
+		/*defer r.Body.Close()
 		reqbody, err := io.ReadAll(r.Body)
 		if err != nil {
 			log.Fatalf("Couldn't parse request body. %+v", err)
-		}
+		}*/
 
 		response, err := http.DefaultClient.Do(req)
 		if err != nil {
@@ -51,8 +51,8 @@ func main() {
 
 		fmt.Fprintf(w, "%v", string(body))
 
-		fmt.Printf("%v", string(reqbody))
-		fmt.Print("http:/" + r.URL.Path)
+		//fmt.Printf("%v", string(reqbody))
+		//fmt.Print("http:/" + r.URL.Path)
 	})
 	log.Fatal(http.ListenAndServe(":8081", nil))
 }
